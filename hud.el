@@ -52,9 +52,10 @@
 (defun hud-show-hot-deals ()
   "Show HUD hot deals."
   (interactive)
+  (if (get-buffer "hud-hot-deals")
+      (progn (toggle-read-only)
+	     (erase-buffer)))
   (set-buffer (get-buffer-create "hud-hot-deals"))
-  (toggle-read-only)
-  (erase-buffer)
   (pop-to-buffer "hud-hot-deals")
   (insert "Loading please wait...")
   (hud-minor-mode)
