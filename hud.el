@@ -54,7 +54,7 @@
   (interactive)
   (if (get-buffer "hud-hot-deals")
       (progn (toggle-read-only)
-	     (erase-buffer)))
+						 (erase-buffer)))
   (set-buffer (get-buffer-create "hud-hot-deals"))
   (pop-to-buffer "hud-hot-deals")
   (insert "Loading please wait...")
@@ -63,13 +63,17 @@
    hud-endpoint
    :params '(("output" . "json") ("key" . "cdf3ead1c5b7f68cb2a575ea45b857be"))
    :parser 'json-read
+   :error (function*
+					 (lambda (&rest args &key error-thrown &allow-other-keys)
+						 (erase-buffer)
+						 (insert "Got error: %S" error-thrown)))
    :success (function*
-	     (lambda (&key data &allow-other-keys)
-	       (erase-buffer)
-	       (setq hud-deals (assoc-default 'items (assoc-default 'deals data)))
-	       (loop for deal across hud-deals
-		     do (insert (format "* %s\n" (assoc-default 'title deal))))
-	       (read-only-mode)))))
+						 (lambda (&key data &allow-other-keys)
+							 (erase-buffer)
+							 (setq hud-deals (assoc-default 'items (assoc-default 'deals data)))
+							 (loop for deal across hud-deals
+										 do (insert (format "* %s\n" (assoc-default 'title deal))))
+							 (read-only-mode)))))
 
 ;;; Modes
 
