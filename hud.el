@@ -43,32 +43,32 @@
 
 ;;;###autoload
 (defun hud-load-deal ()
-	"Load the select deal"
-	(interactive)
-	(toggle-read-only)
+  "Load the select deal"
+  (interactive)
+  (toggle-read-only)
   (browse-url (assoc-default 'deal_link (aref hud-deals (1- (line-number-at-pos))))))
 
 ;;;###autoload
 (defun hud-show-hot-deals ()
   "Show HUD hot deals."
-	(interactive)
-	(set-buffer (get-buffer-create "hud-hot-deals"))
-	(toggle-read-only)
-	(erase-buffer)
-	(pop-to-buffer "hud-hot-deals")
-	(insert "Loading please wait...")
+  (interactive)
+  (set-buffer (get-buffer-create "hud-hot-deals"))
+  (toggle-read-only)
+  (erase-buffer)
+  (pop-to-buffer "hud-hot-deals")
+  (insert "Loading please wait...")
   (hud-minor-mode)
   (request
    hud-endpoint
    :params '(("output" . "json") ("key" . "cdf3ead1c5b7f68cb2a575ea45b857be"))
    :parser 'json-read
    :success (function*
-						 (lambda (&key data &allow-other-keys)
-							 (erase-buffer)
-							 (setq hud-deals (assoc-default 'items (assoc-default 'deals data)))
-							 (loop for deal across hud-deals
-										 do (insert (format "* %s\n" (assoc-default 'title deal))))
-							 (read-only-mode)))))
+	     (lambda (&key data &allow-other-keys)
+	       (erase-buffer)
+	       (setq hud-deals (assoc-default 'items (assoc-default 'deals data)))
+	       (loop for deal across hud-deals
+		     do (insert (format "* %s\n" (assoc-default 'title deal))))
+	       (read-only-mode)))))
 
 ;;; Modes
 
